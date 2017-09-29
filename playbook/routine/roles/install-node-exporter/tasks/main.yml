@@ -1,0 +1,12 @@
+- name: copy linux node-exporter to dst
+  copy:
+     src: nodedaemon-exporter_4.0.7_all.deb
+     dest: /tmp/
+  when: ansible_os_family == "Debian" and ansible_distribution == "Ubuntu"
+- name: install supervisor package
+  apt:
+     name: supervisor
+     state: present
+- name:  install deb file by dpkg 
+  apt: 
+     deb="/tmp/nodedaemon-exporter_4.0.7_all.deb"

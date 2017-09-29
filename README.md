@@ -1,4 +1,2 @@
-# ansibleAutoIT
-
-This is the first commit.
-
+# ansible-monitor
+ansible script for cloud monitor
