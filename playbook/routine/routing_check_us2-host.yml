@@ -1,0 +1,20 @@
+---
+# This playbook deploys the whole application stack in this site.
+- name: apply common configuration to all nodes
+  hosts: all
+  remote_user: root
+
+ # roles:
+ #   - routing_check_vpn_dns
+  tasks:
+  - name: check the us2 host of l2l vpn
+    icmp_ping: host="192.168.111.1"
+    ignore_errors: true
+    register: result
+  - include_tasks: report_weixin.yml
+    vars:
+        ip: "192.168.111.1"
+        time: "{{ lookup('pipe', 'date -d \"1 day ago\" +\"%Y%m%d\"') }}"
+        info: "connect failed"
+        err: "{{result}}"
+    when: result|failed

@@ -1,0 +1,18 @@
+---
+# This playbook deploys the whole application stack in this site.
+- name: apply common configuration to all nodes
+  hosts: all
+  remote_user: root
+  
+  tasks:
+  - name: check the china-unicom-gateway
+    icmp_ping: host="180.167.5.169"
+    ignore_errors: true
+    register: result
+  - include_tasks: report_weixin.yml
+    vars:
+        ip:  "180.167.5.169"
+        time: "{{ lookup('pipe', 'date -d \"1 day ago\" +\"%Y%m%d\"') }}"
+        info: "connect failed"
+        err: "{{result}}"
+    when: result|failed

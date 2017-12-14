@@ -1,0 +1,20 @@
+---
+# This playbook deploys the whole application stack in this site.
+- name: apply common configuration to all nodes
+  hosts: all
+  remote_user: root
+
+ # roles:
+ #   - routing_check_vpn_dns
+  tasks:
+  - name: check the the connecting of youtube.com 
+    icmp_ping: host="www.youtube.com"
+    ignore_errors: true
+    register: result
+  - include_tasks: report_weixin.yml
+    vars:
+        ip: "www.youtube.com"
+        time: "{{ lookup('pipe', 'date -d \"1 day ago\" +\"%Y%m%d\"') }}"
+        info: "connect failed"
+        err: "{{result}}"
+    when: result|failed
